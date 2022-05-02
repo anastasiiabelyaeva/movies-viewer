@@ -6,7 +6,7 @@ void main() {
   addMovie(
       horrorFilmList,
       '849 719',
-      'Alien',
+      'Чужой',
       'alien.jpg',
       8.063,
       '25.05.1979',
@@ -15,20 +15,24 @@ void main() {
   addMovie(
       horrorFilmList,
       '980 008',
-      'The Shining',
-      'spiderman.jpg',
+      'Сияние',
+      'shining.jpeg',
       7.774,
       '23.05.1980',
       'Писатель приезжает с семьей в загадочный отель',
       'english');
+  addMovie(horrorFilmList, '123', '1408', '1408.jpg', 6.7, '12.06.2007',
+      'Скептик-писатель селится в номере, где умерли 56 человек. ', 'english');
+  addMovie(horrorFilmList, '45667', 'Оно', 'it.jpg', 5.3, '05.09.2017',
+      'Злобный клоун терроризирует подростков', 'english');
   addMovie(
       horrorFilmList,
-      '3 330',
-      'La monja',
-      'batman.jpg',
-      6.345,
-      '12.05.2005',
-      'Шесть девочек попадают в интернат под присмотр монахинь',
+      '45668',
+      'Приют',
+      'shelter.jpeg',
+      5.7,
+      '20.05.2007',
+      'Самые счастливые годы Лаура провела в сиротском приюте на побережье. Любимые воспитатели заменили ей родителей, а друзья – братьев и сестер. Через тридцать лет Лаура возвращается в дом своего детства с мужем и семилетним сыном Симоном. Она мечтает восстановить его и открыть для новых маленьких посетителей. Однако в день открытия приюта обнаруживается, что Симон бесследно исчез. Лауре кажется, что дело в Томасе, вымышленном друге сына, с чьим призраком она столкнулась в день исчезновения.',
       'spanish');
   debugPrint('${filteredList(horrorFilmList, 'voteAverage', 6.4)}');
   printMovies(horrorFilmList);
@@ -140,17 +144,20 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  List<MovieWidget> _movieWidgets = <MovieWidget>[];
-  final nameController = TextEditingController();
-  String UserName = '';
-  int val = -1;
-
+  final List<MovieWidget> _movieWidgets = <MovieWidget>[];
+  List<MovieWidget> filteredWidgetList = <MovieWidget>[];
+  bool isChecked = false;
+  Language? _language = Language.english;
   void initState() {
     for (int index = 0; index < horrorFilmList.length; index++) {
-      _movieWidgets.add(MovieWidget(
+      _movieWidgets.add(
+        MovieWidget(
           title: horrorFilmList[index].title,
           picture: horrorFilmList[index].picture,
-          language: horrorFilmList[index].movieLanguage()));
+          language: horrorFilmList[index].movieLanguage(),
+          voteAverage: horrorFilmList[index].voteAverage,
+        ),
+      );
     }
     super.initState();
   }
@@ -160,45 +167,64 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
+        actions: <Widget>[
+          // PopupMenuButton(
+          //     icon: Icon(Icons.more_horiz), itemBuilder: (context) => []),
+          IconButton(
+              onPressed: () {
+                setState(() {
+                  // List<MovieWidget> list = _movieWidgets
+
+                  if (isChecked) {
+                    filteredWidgetList = _movieWidgets
+                        .where((element) => (element.voteAverage > 7 &&
+                            element.language == _language))
+                        .toList(growable: true);
+                  } else {
+                    filteredWidgetList = _movieWidgets
+                        .where((element) => (element.language == _language))
+                        .toList(growable: true);
+                  }
+                });
+              },
+              icon: const Icon(Icons.sort)),
+        ],
       ),
-      // body: WidgetList()
       body: SingleChildScrollView(
         child: Column(children: <Widget>[
-          Row(
-            children: <Widget>[
-              ElevatedButton(
-                  onPressed: () {
-                    print('Button 2');
-                  },
-                  child: Text('Применить'))
-            ],
-          ),
-          // ElevatedButton(
-          //     onPressed: () {
-          //       print('dddd');
-          //       for (int index = 0; index < _movieWidgets.length; index++) {
-          //         if (_movieWidgets[index].title == "Alien") {
-          //           setState(() {
-          //             _movieWidgets.remove(_movieWidgets[index]);
-          //             // _movieWidgets.add(_movieWidgets[0]);
-          //           });
-          //         }
-          //       }
-          //     },
-          //     child: Text('Применить')),
+          // const LanguageRadioButtonList(),
           ListView.builder(
-            physics: NeverScrollableScrollPhysics(),
             shrinkWrap: true,
-            itemCount: _movieWidgets.length,
-            itemBuilder: (context, index) => _movieWidgets[index],
-            // itemCount: horrorFilmList.length,
-            // itemBuilder: (context, index) {
-            //   final item = horrorFilmList[index];
-            //   return MovieWidget(
-            //       title: item.title,
-            //       picture: item.picture,
-            //       language: item.movieLanguage());
-            // },
+            itemCount: Language.values.length,
+            itemBuilder: (context, index) => ListTile(
+              title: Text(Language.values[index].toPrettyString()),
+              leading: Radio<Language>(
+                value: Language.values[index],
+                groupValue: _language,
+                onChanged: (Language? value) {
+                  setState(() {
+                    _language = value;
+                  });
+                },
+              ),
+            ),
+          ),
+          CheckboxListTile(
+            checkColor: Colors.white,
+            title: const Text('Рейтинг > 7'),
+            value: isChecked,
+            onChanged: (bool? value) {
+              setState(() {
+                isChecked = value!;
+              });
+            },
+          ),
+
+          ListView.builder(
+            physics: const NeverScrollableScrollPhysics(),
+            shrinkWrap: true,
+            itemCount: filteredWidgetList.length,
+            itemBuilder: (context, index) => filteredWidgetList[index],
           )
         ]),
       ),
@@ -211,23 +237,36 @@ class MovieWidget extends StatelessWidget {
       {required this.title,
       required this.picture,
       required this.language,
+      required this.voteAverage,
       Key? key})
       : super(key: key);
 
   final String title;
   final String picture;
   final Language language;
+  final double voteAverage;
   @override
   Widget build(BuildContext context) {
     return Container(
-        color: Colors.grey,
-        child: Column(children: [
-          Text(title),
-          Image.asset(
-            'assets/' + picture,
-          ),
-          Text('Язык: ' + language.toPrettyString())
-        ]));
+      decoration: BoxDecoration(
+        color: const Color.fromARGB(255, 56, 16, 10),
+        border: Border.all(
+          color: const Color.fromARGB(255, 119, 47, 47),
+          width: 8,
+        ),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Column(children: [
+        Image.asset(
+          'assets/' + picture,
+        ),
+        Text(title + ' (Язык: ' + language.toPrettyString() + ')',
+            style: const TextStyle(
+                color: Color.fromARGB(255, 235, 208, 208),
+                fontFamily: 'Verdana',
+                fontSize: 24)),
+      ]),
+    );
   }
 }
 
@@ -245,13 +284,70 @@ class WidgetList extends StatelessWidget {
             itemBuilder: (context, index) {
               final item = horrorFilmList[index];
               return MovieWidget(
-                  title: item.title,
-                  picture: item.picture,
-                  language: item.movieLanguage());
+                title: item.title,
+                picture: item.picture,
+                language: item.movieLanguage(),
+                voteAverage: item.voteAverage,
+              );
             },
           ),
         )
       ],
+    );
+  }
+}
+
+class CheckBox extends StatefulWidget {
+  const CheckBox({Key? key}) : super(key: key);
+
+  @override
+  _CheckBoxState createState() => _CheckBoxState();
+}
+
+class _CheckBoxState extends State<CheckBox> {
+  bool isChecked = false;
+  @override
+  Widget build(BuildContext context) {
+    return CheckboxListTile(
+      checkColor: Colors.white,
+      title: const Text('Рейтинг > 7'),
+      value: isChecked,
+      onChanged: (bool? value) {
+        setState(() {
+          isChecked = value!;
+        });
+      },
+    );
+  }
+}
+
+class LanguageRadioButtonList extends StatefulWidget {
+  const LanguageRadioButtonList({Key? key}) : super(key: key);
+
+  @override
+  _LanguageRadioButtonListState createState() =>
+      _LanguageRadioButtonListState();
+}
+
+class _LanguageRadioButtonListState extends State<LanguageRadioButtonList> {
+  Language? _language = Language.english;
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+      shrinkWrap: true,
+      itemCount: Language.values.length,
+      itemBuilder: (context, index) => ListTile(
+        title: Text(Language.values[index].toPrettyString()),
+        leading: Radio<Language>(
+          value: Language.values[index],
+          groupValue: _language,
+          onChanged: (Language? value) {
+            setState(() {
+              _language = value;
+            });
+          },
+        ),
+      ),
     );
   }
 }
