@@ -1,109 +1,39 @@
+import 'package:films_viewer/components/home_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:films_viewer/data.dart';
 
-enum Language { english, spanish, unknown }
+late List<Film> films = <Film>[];
 void main() {
-  List<HorrorMovie> horrorFilmList = <HorrorMovie>[];
-  addMovie(
-      horrorFilmList,
-      '849 719',
-      'Alien',
+  films.add(Film(
+      '849',
+      'Чужой',
       'alien.jpg',
       8.063,
-      '25.05.1979',
+      '25.03.1979',
       'Группа космонавтов высаживается на неизвестной планете и знакомится с ксеноморфом',
-      'english');
-  addMovie(
-      horrorFilmList,
-      '980 008',
-      'The Shining',
-      'TheShining.png',
-      7.774,
-      '23.05.1980',
-      'Писатель приезжает с семьей в загадочный отель',
-      'english');
-  addMovie(
-      horrorFilmList,
-      '3 330',
-      'La monja',
-      'LaMonja.png',
-      6.345,
-      '12.05.2005',
-      'Шесть девочек попадают в интернат под присмотр монахинь',
-      'spanish');
-  debugPrint('${filteredList(horrorFilmList, 'voteAverage', 6.4)}');
-  printMovies(horrorFilmList);
+      'english'));
+  films.add(Film('980 008', 'Сияние', 'shining.jpeg', 7.774, '23.05.1980',
+      'Писатель приезжает с семьей в загадочный отель', 'english'));
+  films.add(Film('123', '1408', '1408.jpg', 6.7, '12.06.2007',
+      'Скептик-писатель селится в номере, где умерли 56 человек. ', 'english'));
+  films.add(Film('45667', 'Оно', 'it.jpg', 5.3, '05.09.2017',
+      'Злобный клоун терроризирует подростков', 'english'));
+  films.add(Film(
+      '45668',
+      'Приют',
+      'shelter.jpeg',
+      5.7,
+      '20.05.2007',
+      'Самые счастливые годы Лаура провела в сиротском приюте на побережье. Любимые воспитатели заменили ей родителей, а друзья – братьев и сестер. Через тридцать лет Лаура возвращается в дом своего детства с мужем и семилетним сыном Симоном. Она мечтает восстановить его и открыть для новых маленьких посетителей. Однако в день открытия приюта обнаруживается, что Симон бесследно исчез. Лауре кажется, что дело в Томасе, вымышленном друге сына, с чьим призраком она столкнулась в день исчезновения.',
+      'spanish'));
+  // debugPrint('${filteredList(films, 'voteAverage', 6.4)}');
+  // printMovies(films);
+  runApp(const MyApp());
 }
 
-void addMovie(
-    List<HorrorMovie> list,
-    String id,
-    String title,
-    String picture,
-    double voteAverage,
-    String releaseDate,
-    String description,
-    String language) {
-  HorrorMovie movie = HorrorMovie(
-      id, title, picture, voteAverage, releaseDate, description, language);
-  debugPrint('Movie language: ${movie.movieLanguage()}');
-  debugPrint('Язык ${movie.movieLanguage().toPrettyString()}');
-  list.add(movie);
-}
-
-abstract class Movie {
-  String id;
-  String title;
-  String picture;
-  double voteAverage;
-  String releaseDate;
-  String description;
-  String language;
-
-  Movie(this.id, this.title, this.picture, this.voteAverage, this.releaseDate,
-      this.description, this.language);
-}
-
-mixin MovieLanguage on Movie {
-  Language movieLanguage() {
-    Language currentLanguage = Language.unknown;
-    Language.values.forEach((element) {
-      if (element.name == language) currentLanguage = element;
-    });
-    return currentLanguage;
-  }
-}
-
-class HorrorMovie extends Movie with MovieLanguage {
-  HorrorMovie(String id, String title, String picture, double voteAverage,
-      String releaseDate, String description, String language)
-      : super(id, title, picture, voteAverage, releaseDate, description,
-            language);
-}
-
-extension LanguageToRusString on Language {
-  String toPrettyString() {
-    switch (this) {
-      case Language.english:
-        return 'Английский';
-      case Language.spanish:
-        return 'Испанский';
-      default:
-        return 'Неизвестный';
-    }
-  }
-}
-
-Future printMovies(List<HorrorMovie> movieList) async {
-  for (var index = 0; index < movieList.length; index++) {
-    await new Future.delayed(new Duration(seconds: 2));
-    debugPrint('Movie ${movieList[index].title}');
-  }
-}
-
-List<String> filteredList(
-    List<HorrorMovie> list, String property, double value) {
+List<String> filteredList(List<Film> list, String property, double value) {
   List<String> resultList = <String>[];
-  List<HorrorMovie> filteredList = <HorrorMovie>[];
+  List<Film> filteredList = <Film>[];
   if (property == 'voteAverage') {
     filteredList = list
         .where((element) => (element.voteAverage > value))
@@ -113,4 +43,21 @@ List<String> filteredList(
     resultList.add(filteredList[index].title);
   }
   return resultList;
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: '',
+      theme: ThemeData(primarySwatch: Colors.red),
+      home: HomePage(
+        films,
+        title: '',
+      ),
+    );
+  }
 }
