@@ -55,10 +55,8 @@ class MyApp extends StatelessWidget {
       title: '',
       theme: ThemeData(primarySwatch: Colors.red),
       home: HomePage(
-        // title: "Movie House",
-
+        films,
         title: '',
-        films: films,
       ),
     );
   }

@@ -1,3 +1,5 @@
+import 'package:flutter/foundation.dart';
+
 enum Language { english, spanish, unknown }
 
 abstract class Movie {
@@ -16,9 +18,10 @@ abstract class Movie {
 mixin MovieLanguage on Movie {
   Language movieLanguage() {
     Language currentLanguage = Language.unknown;
-    Language.values.forEach((element) {
+    for (var element in Language.values) {
+      // Language.values.forEach((element) {
       if (element.name == language) currentLanguage = element;
-    });
+    }
     return currentLanguage;
   }
 }
@@ -45,7 +48,7 @@ extension LanguageToRusString on Language {
 
 Future printMovies(List<Film> movieList) async {
   for (var index = 0; index < movieList.length; index++) {
-    await new Future.delayed(new Duration(seconds: 2));
-    print('Movie ${movieList[index].title}');
+    await Future.delayed(const Duration(seconds: 2));
+    if (kDebugMode) print('Movie ${movieList[index].title}');
   }
 }

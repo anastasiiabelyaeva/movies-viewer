@@ -1,11 +1,12 @@
 import 'package:films_viewer/components/movie_widget.dart';
 import 'package:films_viewer/main.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:films_viewer/data.dart';
 
+// ignore: must_be_immutable
 class HomePage extends StatefulWidget {
-  HomePage({Key? key, required this.title, required this.films})
-      : super(key: key);
+  HomePage(this.films, {Key? key, required this.title}) : super(key: key);
   final String title;
   late List<Film> films = <Film>[];
 
@@ -14,9 +15,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  @override
   late TextEditingController _textEditingController;
-  String textForSearch = '';
   bool isChecked = false;
   Language? _language = Language.english;
   final List<MovieWidget> defaultMovieWidgets = <MovieWidget>[];
@@ -41,12 +40,13 @@ class _HomePageState extends State<HomePage> {
     super.dispose();
   }
 
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
         actions: <Widget>[
-          Container(
+          SizedBox(
             width: 300,
             height: 20,
             child: TextField(
@@ -54,11 +54,10 @@ class _HomePageState extends State<HomePage> {
               textCapitalization: TextCapitalization.words,
               keyboardType: TextInputType.number,
               textInputAction: TextInputAction.search,
-              style: TextStyle(
+              style: const TextStyle(
                   fontSize: 22, color: Color.fromARGB(255, 199, 204, 207)),
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                   filled: true,
-                  icon: Icon(Icons.search),
                   border: OutlineInputBorder(
                       borderRadius: BorderRadius.all(Radius.circular(10)))),
             ),
@@ -71,9 +70,9 @@ class _HomePageState extends State<HomePage> {
                           (element.title.contains(_textEditingController.text)))
                       .toList(growable: true);
                 });
-                print(_textEditingController.text);
+                if (kDebugMode) print(_textEditingController.text);
               },
-              icon: Icon(Icons.search)),
+              icon: const Icon(Icons.search)),
           IconButton(
               onPressed: () {
                 setState(() {

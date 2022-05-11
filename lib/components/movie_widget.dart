@@ -18,9 +18,9 @@ class MovieWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: Color.fromARGB(255, 68, 52, 49),
+        color: const Color.fromARGB(255, 68, 52, 49),
         border: Border.all(
-          color: Color.fromARGB(255, 65, 68, 62),
+          color: const Color.fromARGB(255, 65, 68, 62),
           width: 8,
         ),
         borderRadius: BorderRadius.circular(12),
