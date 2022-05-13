@@ -83,13 +83,14 @@ class FilmCard extends StatelessWidget {
               padding: const EdgeInsets.only(top: 40),
               child: Text(
                 title,
+                maxLines: 3,
                 overflow: TextOverflow.ellipsis,
                 style: const TextStyle(
                     color: Colors.white,
                     fontSize: 34,
                     shadows: [
                       Shadow(
-                        blurRadius: 0.0,
+                        blurRadius: 40.0,
                         color: Colors.black,
                       ),
                     ]),

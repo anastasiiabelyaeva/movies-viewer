@@ -11,7 +11,9 @@ class FilmList extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListView.builder(
         itemCount: filmWidgetList.length,
-        itemBuilder: (context, index) =>
-            FilmTile.fromModel(model: filmWidgetList[index]));
+        itemBuilder: (context, index) => FilmTile.fromModel(
+              model: filmWidgetList[index],
+              checkable: true,
+            ));
   }
 }

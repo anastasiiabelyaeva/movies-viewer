@@ -27,6 +27,7 @@ class _DetailPageState extends State<DetailPage> {
             releaseDate: widget.model.releaseDate,
             description: widget.model.description,
             language: widget.model.language,
+            checkable: false,
           ),
         ]));
   }
