@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:films_viewer/data.dart';
+import 'package:films_viewer/app/other/data.dart';
 
 class MovieWidget extends StatelessWidget {
   const MovieWidget(
