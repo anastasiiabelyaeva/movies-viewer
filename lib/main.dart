@@ -6,6 +6,7 @@ import 'package:films_viewer/features/home/pages/settings_page.dart';
 import 'package:flutter/material.dart';
 import 'package:films_viewer/app/other/data.dart';
 
+
 void main() {
   runApp(const MyApp());
 }
